@@ -5,7 +5,7 @@ using Grocery.Domain.Entities.Order_Aggregate;
 using Grocery.Dtos;
 using Grocery.Helpers;
 
-namespace Talabat.APIs.Helpers
+namespace Grocery.Helpers
 {
     public class MappingProfiles:Profile
     {

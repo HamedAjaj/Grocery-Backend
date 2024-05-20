@@ -5,7 +5,7 @@ using Grocery.Dtos;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Talabat.APIs.Controllers
+namespace Grocery.Controllers
 {
     public class BasketController : BaseApiController
     {

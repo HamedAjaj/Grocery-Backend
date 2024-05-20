@@ -8,12 +8,13 @@ using System.Text;
 using Grocery.Domain.Entities.Identity;
 using Grocery.Repository.Identity;
 
-namespace Talabat.APIs.Extensions
+namespace Grocery.Extensions
 {
     public static class IdentityServicesExtensions
     {
         public static IServiceCollection AddIdentityServices(this IServiceCollection services, IConfiguration configuration)
         {
+
             services.AddIdentity<AppUser, IdentityRole>(options =>
             {
                 options.Password.RequireDigit = true;
@@ -42,6 +43,7 @@ namespace Talabat.APIs.Extensions
                         ValidateLifetime = true,
                     };
                 });
+
 
             return services;
         }

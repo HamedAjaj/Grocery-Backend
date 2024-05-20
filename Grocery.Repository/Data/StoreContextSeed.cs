@@ -21,12 +21,12 @@ namespace Grocery.Repository.Data
                 if(brands?.Count > 0)
                 {
                     var brands2 = brands.Select(b => new ProductBrand() { Name = b.Name });
-                    foreach(var brand in brands2) {
+                    foreach(var brand in brands2) 
                         await context.Set<ProductBrand>().AddAsync(brand);
-                    }
                     await context.SaveChangesAsync();
                 }
             }
+
             if (!context.ProductTypes.Any())
             {
                 var productTypeData = File.ReadAllText("../Grocery.Repository/Data/DataSeed/types.json");
@@ -42,6 +42,7 @@ namespace Grocery.Repository.Data
                     await context.SaveChangesAsync();
                 }
             }
+
             if (!context.Products.Any())
             {
                 var productsData = File.ReadAllText("../Grocery.Repository/Data/DataSeed/products.json");
@@ -54,6 +55,7 @@ namespace Grocery.Repository.Data
                         await context.Set<Product>().AddAsync(product);
                     }
                     await context.SaveChangesAsync();
+
                 }
             }
             if (!context.DeliveryMethods.Any())

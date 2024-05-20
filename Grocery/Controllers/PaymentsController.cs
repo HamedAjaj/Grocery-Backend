@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Talabat.APIs.Controllers
+namespace Grocery.Controllers
 {
     [Authorize]
     public class PaymentsController : BaseApiController

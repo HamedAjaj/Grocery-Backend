@@ -7,9 +7,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
-using Talabat.APIs.Extensions;
+using Grocery.Extensions;
 
-namespace Talabat.APIs.Controllers
+namespace Grocery.Controllers
 {
     public class AccountController : BaseApiController
     {

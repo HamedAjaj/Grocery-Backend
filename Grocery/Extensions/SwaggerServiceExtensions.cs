@@ -2,7 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 
-namespace Talabat.APIs.Extensions
+namespace Grocery.Extensions
 {
     public static class SwaggerServiceExtensions
     {

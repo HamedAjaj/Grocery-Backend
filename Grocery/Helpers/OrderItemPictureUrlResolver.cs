@@ -15,10 +15,7 @@ namespace Grocery.Helpers
 
 
         public string Resolve(OrderItem source, OrderItemDto destination, string destMember, ResolutionContext context)
-        {
-            if(!string.IsNullOrEmpty(source.ProductItemOrdered.PictureUrl))
-                return $"{Configuration["ApiUrl"]}{source.ProductItemOrdered.PictureUrl}";
-            return null;
-        }
+        => !string.IsNullOrEmpty(source.ProductItemOrdered.PictureUrl) ?
+            $"{Configuration["ApiUrl"]}{source.ProductItemOrdered.PictureUrl}": string.Empty;
     }
 }

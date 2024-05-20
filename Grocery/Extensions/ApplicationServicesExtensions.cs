@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using Grocery.Errors;
-using Talabat.APIs.Helpers;
+using Grocery.Helpers;
 using Grocery.Domain.Repositories;
 using Grocery.Domain.Services;
 using Grocery.Repository.Data;
@@ -11,6 +11,9 @@ using Grocery.Service;
 using Grocery.Service.Payment;
 using Grocery.Repository;
 using Grocery.Domain;
+using Grocery.Domain.Entities.Identity;
+using Grocery.Repository.Identity;
+using Microsoft.AspNetCore.Identity;
 
 namespace Grocery.Extensions
 {
@@ -18,17 +21,22 @@ namespace Grocery.Extensions
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
-            services.AddScoped<IPaymentService, PaymentService>();
+
+            // builder.Services.AddSingleton<IConnectionMultiplexer>(s => { })
+        
+
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
-            services.AddScoped<IOrderService, OrderService>();
+          //  services.AddScoped<IPaymentService, PaymentService>();
 
-            services.AddScoped<ITokenService, TokenService>();
+           // services.AddScoped<IOrderService, OrderService>();
 
-            services.AddScoped(typeof(IBasketRepository), typeof(BasketRepository));
+           services.AddScoped<ITokenService, TokenService>();
 
-            //services.AddScoped<IGenericRepository<>, GenericRepository<>>();
+           // services.AddScoped(typeof(IBasketRepository), typeof(BasketRepository));
+
+          //  services.AddScoped<IGenericRepository<>, GenericRepository<>>();
             services.AddScoped(typeof(IGenericRespository<>), typeof(GenericRepository<>));
 
 

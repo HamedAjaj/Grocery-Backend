@@ -8,7 +8,7 @@ using System.Net;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace Talabat.APIs.Middlewares
+namespace Grocery.Middlewares
 {
     public class ExceptionMiddleware
     {

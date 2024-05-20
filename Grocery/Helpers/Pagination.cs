@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-namespace Talabat.APIs.Helpers
+namespace Grocery.Helpers
 {
     public class Pagination<T>
     {
