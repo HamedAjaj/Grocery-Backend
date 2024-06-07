@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Grocery.Domain.Services
+namespace Grocery.Domain.IServices.IPaymentServices
 {
     public interface IPaymentService
     {

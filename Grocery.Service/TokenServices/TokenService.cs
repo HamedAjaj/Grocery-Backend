@@ -1,5 +1,5 @@
 ﻿using Grocery.Domain.Entities.Identity;
-using Grocery.Domain.Services;
+using Grocery.Domain.IServices.ITokenServices;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -13,7 +13,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Grocery.Service
+namespace Grocery.Service.TokenServices
 {
     public class TokenService : ITokenService
     {
@@ -70,14 +70,14 @@ namespace Grocery.Service
 
         public async Task<string> CreateTokenAsync(AppUser user, UserManager<AppUser> userManager)
         {
-          
+
             //private Claims
             var authClaims = new List<Claim>(){
                 new Claim(ClaimTypes.Name, user.DisplayName),
                 new Claim(ClaimTypes.Email, user.Email),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
              };
-              
+
 
             // if user have roles
             var userRoles = await userManager.GetRolesAsync(user);
@@ -97,6 +97,6 @@ namespace Grocery.Service
                 );
             // Generate token
             return new JwtSecurityTokenHandler().WriteToken(token);
+        }
     }
-  }
 }

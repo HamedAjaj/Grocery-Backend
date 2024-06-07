@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Grocery.Domain.Entities.Identity;
 
-namespace Grocery.Domain.Services
+namespace Grocery.Domain.IServices.ITokenServices
 {
     public interface ITokenService
     {

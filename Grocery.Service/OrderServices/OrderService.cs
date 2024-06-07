@@ -1,8 +1,9 @@
-﻿using Grocery.Domain;
-using Grocery.Domain.Entities;
+﻿using Grocery.Domain.Entities;
 using Grocery.Domain.Entities.Order_Aggregate;
+using Grocery.Domain.IServices.IOrderServices;
+using Grocery.Domain.IServices.IPaymentServices;
+using Grocery.Domain.IUnitOfWork;
 using Grocery.Domain.Repositories;
-using Grocery.Domain.Services;
 using Grocery.Domain.Specifications.Order_Spec;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Grocery.Service
+namespace Grocery.Service.OrderServices
 {
     public class OrderService : IOrderService
     {
@@ -55,15 +56,15 @@ namespace Grocery.Service
             // 5. Create Order
             #region For check if order is exist , to prevent user to create more than order with the same PaymentIntentId , to prevent this hole
             var spec = new OrderWithPaymentIntentIdwithSpecification(basket.PaymentIntentId); // where in query
-            var existingOrder =  await _unitOfWork.Respository<Order>().GetByIdWithSpecificationAsync(spec);
+            var existingOrder = await _unitOfWork.Respository<Order>().GetByIdWithSpecificationAsync(spec);
 
             if (existingOrder != null)
             {
                 _unitOfWork.Respository<Order>().Delete(existingOrder);// order with paymentIntentId of order for basket with old order or updated order
                 _paymentService.CreateOrUpdatePaymentIntent(basket.Id);// paymentIntentId of order for basket with new order or updated order
             }
-          
-            var order = new Order(buyerEmail, shippingAddress, deliveryMehtod, orderItems, subTotal,basket.PaymentIntentId);
+
+            var order = new Order(buyerEmail, shippingAddress, deliveryMehtod, orderItems, subTotal, basket.PaymentIntentId);
             #endregion
             await _unitOfWork.Respository<Order>().Add(order);
 

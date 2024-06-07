@@ -6,9 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Grocery.Domain
+namespace Grocery.Domain.IUnitOfWork
 {
-    public interface IUnitOfWork :IAsyncDisposable
+    public interface IUnitOfWork : IAsyncDisposable
     {
         IGenericRespository<TEntity> Respository<TEntity>() where TEntity : BaseEntity;
         Task<int> Complete();

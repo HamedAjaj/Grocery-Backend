@@ -5,9 +5,9 @@ using System.Reflection;
 
 namespace Grocery.Repository.Data
 {
-    public class StoreContext : DbContext
+    public class GroceryContext : DbContext
     {
-        public StoreContext(DbContextOptions<StoreContext> options):base(options)
+        public GroceryContext(DbContextOptions<GroceryContext> options):base(options)
         {   
         }
 
@@ -15,14 +15,9 @@ namespace Grocery.Repository.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            // Fluent API
-
-            //modelBuilder.ApplyConfiguration(new ProductConfiguration());
-            //modelBuilder.ApplyConfiguration(new ProductBrandConfiguration());
-            //modelBuilder.ApplyConfiguration(new ProductTypeConfiguration());
-
+            // Fluent API();
             // make apply all configuration classes
-            modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly()); //this line execute exactly  the 3 lines of classes applied
+            modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());  
         }
         public DbSet<ProductType>  ProductTypes { get; set; }
         public DbSet<ProductBrand>  ProductBrands { get; set; }

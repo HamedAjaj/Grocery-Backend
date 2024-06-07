@@ -19,6 +19,14 @@ namespace Grocery
 
             builder.Services.AddControllers();
             builder.Services.AddApplicationServices();
+
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("GroceryPolicy", options =>
+                {
+                    options.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin();
+                });
+            });
             builder.Services.AddIdentityServices(builder.Configuration);
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
@@ -26,12 +34,18 @@ namespace Grocery
 
             var connectionString = builder.Configuration.GetConnectionString("StoreConnection") ??
                                 throw new InvalidOperationException("Error in Database Connection");
-            builder.Services.AddDbContext<StoreContext>(options => options.UseSqlServer(connectionString));
+            builder.Services.AddDbContext<GroceryContext>(options => options.UseSqlServer(connectionString));
 
 
             builder.Services.AddDbContext<AppIdentityDbContext>(opions =>
             {
                 opions.UseSqlServer(builder.Configuration.GetConnectionString("IdentityConnection"));
+            });
+
+            builder.Services.AddSingleton<IConnectionMultiplexer>(options =>
+            {
+                var connection = builder.Configuration.GetConnectionString("Redis");
+                return ConnectionMultiplexer.Connect(connection);
             });
         
             var app = builder.Build();
@@ -43,11 +57,11 @@ namespace Grocery
             var loggerFactory = services.GetRequiredService<ILoggerFactory>();
             try
             {
-                var dbContext = services.GetRequiredService<StoreContext>();
+                var dbContext = services.GetRequiredService<GroceryContext>();
                 await dbContext.Database.MigrateAsync();
 
                 //  Seed Data
-                await StoreContextSeed.SeedAsync(dbContext);
+                await GroceryContextSeed.SeedAsync(dbContext);
 
                 var identityDbContext = services.GetRequiredService<AppIdentityDbContext>();
                 await identityDbContext.Database.MigrateAsync();
@@ -71,6 +85,7 @@ namespace Grocery
 
             app.UseHttpsRedirection();
 
+            app.UseCors("GroceryPolicy");
             app.UseAuthorization();
 
             app.UseStaticFiles();

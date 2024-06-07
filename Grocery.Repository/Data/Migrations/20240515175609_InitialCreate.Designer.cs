@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Grocery.Repository.Data.Migrations
 {
-    [DbContext(typeof(StoreContext))]
+    [DbContext(typeof(GroceryContext))]
     [Migration("20240515175609_InitialCreate")]
     partial class InitialCreate
     {

@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace Grocery.Repository.Data
 {
-    public static class StoreContextSeed
+    public static class GroceryContextSeed
     {
-        public static async Task SeedAsync(StoreContext context)
+        public static async Task SeedAsync(GroceryContext context)
         {
             if(!context.ProductBrands.Any())
             {

@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Grocery.Domain.Entities.Identity;
-using Grocery.Domain.Services;
 using Grocery.Dtos;
 using Grocery.Errors;
 using Microsoft.AspNetCore.Authorization;
@@ -8,6 +7,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using Grocery.Extensions;
+using Grocery.Helpers.Attributes;
+using Grocery.Domain.IServices.ITokenServices;
 
 namespace Grocery.Controllers
 {
@@ -50,7 +51,7 @@ namespace Grocery.Controllers
         [HttpPost("register")]
         public async Task<ActionResult<UserDto>> Register(RegisterDto registerDto)
         {
-            if(CheckEmailExistAsync(registerDto.Email).Result.Value)
+            if(await _userManager.FindByEmailAsync(registerDto.Email) != null)
             {
                 return new BadRequestObjectResult(new ApiValidationErrorResponse() { Errors = new[] { "Email address is in use" } });
             }
@@ -70,18 +71,13 @@ namespace Grocery.Controllers
             return Ok(new UserDto()
             {
                 DisplayName = user.DisplayName,
-                Email = user.Email,
-                Token = await _tokenService.CreateTokenAsync(user, _userManager)
+                Email = user.Email
             });
         }
 
-        [HttpGet("emailexists")]
-        public async Task<ActionResult<bool>> CheckEmailExistAsync(string email)
-        {
-            return await _userManager.FindByEmailAsync(email) != null;
-        }
 
         [Authorize]
+        [Cache(1000)]
         [HttpGet]
         public async Task<ActionResult<UserDto>> GetCurrentUser()
         {
@@ -96,6 +92,7 @@ namespace Grocery.Controllers
         }
 
         [Authorize]
+        [Cache(1000)]
         [HttpGet("address")]
         public async Task<ActionResult<AddressDto>> GetUserAddress()
         {

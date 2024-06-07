@@ -8,10 +8,10 @@ using System.Text;
 using System.Threading.Tasks;
 using Grocery.Domain.Specifications.Order_Spec;
 using Product = Grocery.Domain.Entities.Product;
-using Grocery.Domain.Services;
 using Grocery.Domain.Entities;
 using Grocery.Domain.Entities.Order_Aggregate;
-using Grocery.Domain;
+using Grocery.Domain.IUnitOfWork;
+using Grocery.Domain.IServices.IPaymentServices;
 
 namespace Grocery.Service.Payment
 {
@@ -37,7 +37,7 @@ namespace Grocery.Service.Payment
 
             if (basket.DeliveryMethodId.HasValue)
             {
-                var deliveryMethod = await _unitOfWork.Respository<DeliveryMethod>().GetByIdAsync(basket.DeliveryMethodId.Value);
+                var deliveryMethod = await _unitOfWork.Respository<DeliveryMethod>().GetByIdAsync(basket.DeliveryMethodId.Value); //.DeliveryMethodId.Value value because is nullable
                 basket.ShippingCostPrice = deliveryMethod.Cost;
                 shippingPrice = deliveryMethod.Cost;
             }

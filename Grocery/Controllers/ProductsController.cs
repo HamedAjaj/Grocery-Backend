@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Grocery.Domain;
 using Grocery.Domain.Entities;
 using Grocery.Domain.Specifications;
 using Grocery.Dtos;
@@ -9,6 +8,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Grocery.Helpers;
+using Grocery.Domain.IUnitOfWork;
+using Grocery.Helpers.Attributes;
 
 namespace Grocery.Controllers
 {
@@ -24,7 +25,7 @@ namespace Grocery.Controllers
             _mapper = mapper;
         }
 
-        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [Cache(1000)]
         [HttpGet]
         public async Task<ActionResult<Pagination<ProductToReturnDto>>> GetProducts([FromQuery] ProductSpecParams productParams)
         {
@@ -36,7 +37,7 @@ namespace Grocery.Controllers
             return Ok(new Pagination<ProductToReturnDto>(productParams.PageIndex, productParams.PageSize, Count, Data));
         }
 
-
+        [Cache(1000)]
         [HttpGet("id")] // GET: /api/Products/id
         public async Task<ActionResult<ProductToReturnDto>> GetProduct(int id)
         {
@@ -46,7 +47,7 @@ namespace Grocery.Controllers
             return Ok(_mapper.Map<Product, ProductToReturnDto>(product));
         }
 
-
+        [Cache(1000)]
         [HttpGet("brands")]
         public async Task<ActionResult<IReadOnlyList<ProductBrand>>> GetBrands()
         {
@@ -54,7 +55,7 @@ namespace Grocery.Controllers
             return Ok(brands);
         }
 
-
+        [Cache(1000)]
         [HttpGet("types")]
         public async Task<ActionResult<IReadOnlyList<ProductType>>> GetTypes()
         {

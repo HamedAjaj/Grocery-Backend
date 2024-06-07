@@ -15,6 +15,8 @@ namespace Grocery.Domain.Entities
         public string? ClientSecret { get; set; }
         public int? DeliveryMethodId { get; set; }
         public decimal ShippingCostPrice { get; set; }
+
+        // when basket has id but it expired
         public CustomerBasket(string id)
         {
             Id = id;

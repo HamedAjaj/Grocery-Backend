@@ -5,15 +5,22 @@ using System.Runtime.CompilerServices;
 using Grocery.Errors;
 using Grocery.Helpers;
 using Grocery.Domain.Repositories;
-using Grocery.Domain.Services;
 using Grocery.Repository.Data;
-using Grocery.Service;
 using Grocery.Service.Payment;
-using Grocery.Repository;
-using Grocery.Domain;
 using Grocery.Domain.Entities.Identity;
 using Grocery.Repository.Identity;
 using Microsoft.AspNetCore.Identity;
+using Grocery.Repository.Repository.GenericRepository;
+using Grocery.Repository.Repository.BasketRepository;
+using Grocery.Domain.IUnitOfWork;
+using Grocery.Domain.IServices.IResponseCaching;
+using Grocery.Service.CacheResponse;
+using Grocery.Domain.IServices.IOrderServices;
+using Grocery.Domain.IServices.IPaymentServices;
+using Grocery.Domain.IServices.ITokenServices;
+using Grocery.Repository.UnitOfWorks;
+using Grocery.Service.OrderServices;
+using Grocery.Service.TokenServices;
 
 namespace Grocery.Extensions
 {
@@ -28,17 +35,18 @@ namespace Grocery.Extensions
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
-          //  services.AddScoped<IPaymentService, PaymentService>();
+            services.AddScoped<IPaymentService, PaymentService>();
 
-           // services.AddScoped<IOrderService, OrderService>();
+           services.AddScoped(typeof(IOrderService), typeof(OrderService));
 
            services.AddScoped<ITokenService, TokenService>();
 
-           // services.AddScoped(typeof(IBasketRepository), typeof(BasketRepository));
+           services.AddScoped(typeof(IBasketRepository), typeof(BasketRepository));
 
           //  services.AddScoped<IGenericRepository<>, GenericRepository<>>();
             services.AddScoped(typeof(IGenericRespository<>), typeof(GenericRepository<>));
 
+            services.AddScoped<IResponseCacheService, ResponseCacheService>();
 
             //services.AddAutoMapper(M => M.AddProfile(new MappingProfiles()));
             services.AddAutoMapper(typeof(MappingProfiles));

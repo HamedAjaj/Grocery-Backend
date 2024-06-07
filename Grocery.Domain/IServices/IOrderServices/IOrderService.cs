@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Grocery.Domain.Entities.Order_Aggregate;
 
-namespace Grocery.Domain.Services
+namespace Grocery.Domain.IServices.IOrderServices
 {
     public interface IOrderService
     {

@@ -9,24 +9,24 @@ using Grocery.Domain.Repositories;
 using Grocery.Domain.Specifications;
 using Grocery.Repository.Data;
 
-namespace Grocery.Repository
+namespace Grocery.Repository.Repository.GenericRepository
 {
     public class GenericRepository<T> : IGenericRespository<T> where T : BaseEntity
     {
-        private readonly StoreContext _dbContext;
+        private readonly GroceryContext _dbContext;
 
-        public GenericRepository(StoreContext dbContext) // Ask clr to create object from dbcontext implicitly
+        public GenericRepository(GroceryContext dbContext) // Ask clr to create object from dbcontext implicitly
         {
             _dbContext = dbContext;
         }
         public async Task<IReadOnlyList<T>> GetAllAsync()
         {
-            if(typeof(T) == typeof(Product))
-                return (IReadOnlyList<T>) await _dbContext.Products.Include(p=>p.ProductBrand).Include(p=>p.ProductType).ToListAsync();
+            if (typeof(T) == typeof(Product))
+                return (IReadOnlyList<T>)await _dbContext.Products.Include(p => p.ProductBrand).Include(p => p.ProductType).ToListAsync();
             return await _dbContext.Set<T>().ToListAsync();
         }
 
-      
+
 
         public async Task<T> GetByIdAsync(int id)
         {
@@ -51,8 +51,8 @@ namespace Grocery.Repository
 
 
         public async Task Add(T entity) => await _dbContext.Set<T>().AddAsync(entity);
-        public void Update(T entity) =>  _dbContext.Set<T>().Update(entity);
-        public void Delete(T entity)   => _dbContext.Set<T>().Remove(entity); // using this code data is deleted , but i used saveChanges then is DeAtatched
+        public void Update(T entity) => _dbContext.Set<T>().Update(entity);
+        public void Delete(T entity) => _dbContext.Set<T>().Remove(entity); // using this code data is deleted , but i used saveChanges then is DeAtatched
 
 
         /*انا بعمل الfunction دي عشان مكررش نفس الكود */
