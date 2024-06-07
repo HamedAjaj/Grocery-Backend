@@ -9,7 +9,7 @@ namespace Grocery.Domain.Specifications.Order_Spec
 {
     public class OrderWithPaymentIntentIdwithSpecification :BaseSpecification<Order>
     {
-        public OrderWithPaymentIntentIdwithSpecification(string paymentIntentId) // this is where condition order.where(o => o.PaymentIntentId == paymentIntentId).includes ...
+        public OrderWithPaymentIntentIdwithSpecification(string paymentIntentId)
             : base(o => o.PaymentIntentId == paymentIntentId)
         {
             

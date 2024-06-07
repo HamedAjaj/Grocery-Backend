@@ -4,7 +4,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Grocery.Domain.Entities.Identity;
 
-namespace Talabat.APIs.Extensions
+namespace Grocery.Extensions
 {
     public static class UserManagerExtensions
     {

@@ -4,7 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Grocery.Domain.Entities;
 using Grocery.Dtos;
 
-namespace Talabat.APIs.Helpers
+namespace Grocery.Helpers
 {
     public class ProductPictureUrlResolver : IValueResolver<Product, ProductToReturnDto, string>
     {
@@ -16,10 +16,7 @@ namespace Talabat.APIs.Helpers
         public IConfiguration Configuration { get; }
 
         public string Resolve(Product source, ProductToReturnDto destination, string destMember, ResolutionContext context)
-        {
-            if (!string.IsNullOrEmpty(source.PictureUrl))
-                return $"{Configuration["ApiUrl"]}{source.PictureUrl}";
-            return null;
-        }
+        =>!string.IsNullOrEmpty(source.PictureUrl) ? $"{Configuration["ApiUrl"]}{source.PictureUrl}" : string.Empty;
+        
     }
 }

@@ -1,15 +1,16 @@
 ﻿using AutoMapper;
 using Grocery.Domain.Entities.Order_Aggregate;
-using Grocery.Domain.Services;
+using Grocery.Domain.IServices.IOrderServices;
 using Grocery.Dtos;
 using Grocery.Errors;
+using Grocery.Helpers.Attributes;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
-namespace Talabat.APIs.Controllers
+namespace Grocery.Controllers
 {
     [Authorize]
     public class OrdersController : BaseApiController
@@ -37,6 +38,8 @@ namespace Talabat.APIs.Controllers
             return Ok(order);
         }
 
+
+        [Cache(1000)]
         [HttpGet]
         public async Task<ActionResult<IReadOnlyList<OrderToReturnDto>>> GetOrdersForUser()
         {
@@ -44,6 +47,8 @@ namespace Talabat.APIs.Controllers
             var orders = await _orderService.GetOrdersforUserAsync(buyerEmail);
             return Ok(_mapper.Map<IReadOnlyList<Order>, IReadOnlyList<OrderToReturnDto>>(orders));
         }
+
+        [Cache(1000)]
         [HttpGet("{id}")]
         public async Task<ActionResult<OrderToReturnDto>> GetOrderForUser(int id)
         {
@@ -52,6 +57,7 @@ namespace Talabat.APIs.Controllers
             return Ok(_mapper.Map<Order, OrderToReturnDto>(order));
         }
 
+        [Cache(1000)]
         [HttpGet("deliveryMethods")]
         public async Task<ActionResult<IReadOnlyList<DeliveryMethod>>> GetDeliveryMethods()
         {
