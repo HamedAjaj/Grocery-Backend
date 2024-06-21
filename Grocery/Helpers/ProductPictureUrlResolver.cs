@@ -2,7 +2,7 @@
 using AutoMapper.Execution;
 using Microsoft.Extensions.Configuration;
 using Grocery.Domain.Entities;
-using Grocery.Dtos;
+using Grocery.Service.Dtos;
 
 namespace Grocery.Helpers
 {

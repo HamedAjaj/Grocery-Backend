@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Grocery.Domain.Entities.Order_Aggregate;
 using Grocery.Domain.IServices.IOrderServices;
-using Grocery.Dtos;
+using Grocery.Service.Dtos;
 using Grocery.Errors;
 using Grocery.Helpers.Attributes;
 using Microsoft.AspNetCore.Authorization;
@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Grocery.Domain.GroceryMetaData.Routing;
 namespace Grocery.Controllers
 {
     [Authorize]
@@ -28,14 +29,10 @@ namespace Grocery.Controllers
         public async Task<ActionResult<Order>> CreateOrder(OrderDto orderDto)
         {
             string buyerEmail = User.FindFirstValue(ClaimTypes.Email);
-
             var orderAddress = _mapper.Map<AddressDto, Address>(orderDto.ShippingAddress);
-
             var order = await _orderService.CreateOrderAsync(buyerEmail, orderDto.BasketId, orderDto.DeliveryMethodId, orderAddress);
-
-            if (order == null) return BadRequest(new ApiResponse(400, "An error occured during the creation of the order"));
-
-            return Ok(order);
+            return order != null ? Ok(order) :
+                 BadRequest(new ApiResponse(400, "An error occured during the creation of the order"));
         }
 
 
@@ -49,7 +46,7 @@ namespace Grocery.Controllers
         }
 
         [Cache(1000)]
-        [HttpGet("{id}")]
+        [HttpGet(ApiRouter.OrderRoutes.getById)]
         public async Task<ActionResult<OrderToReturnDto>> GetOrderForUser(int id)
         {
             string buyerEmail = User.FindFirstValue(ClaimTypes.Email);
@@ -58,11 +55,8 @@ namespace Grocery.Controllers
         }
 
         [Cache(1000)]
-        [HttpGet("deliveryMethods")]
-        public async Task<ActionResult<IReadOnlyList<DeliveryMethod>>> GetDeliveryMethods()
-        {
-            var deliveryMethods = await _orderService.GetDeliveryMethodsAsync();
-            return Ok(deliveryMethods);
-        }
+        [HttpGet(ApiRouter.OrderRoutes.getdeliveryMethods)]
+        public async Task<ActionResult<IReadOnlyList<DeliveryMethod>>> GetDeliveryMethods() =>
+             Ok(await _orderService.GetDeliveryMethodsAsync());
     }
 }

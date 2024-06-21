@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Grocery.Domain.Entities.Identity;
-using Grocery.Dtos;
+using Grocery.Service.Dtos;
 using Grocery.Errors;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -9,6 +9,9 @@ using System.Security.Claims;
 using Grocery.Extensions;
 using Grocery.Helpers.Attributes;
 using Grocery.Domain.IServices.ITokenServices;
+using Grocery.Domain.IServices.MailServices;
+using Grocery.Service.Dtos.OTP;
+using Grocery.Domain.GroceryMetaData.Routing;
 
 namespace Grocery.Controllers
 {
@@ -17,21 +20,24 @@ namespace Grocery.Controllers
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManger;
         private readonly ITokenService _tokenService;
+        private readonly IMailService _mailService;
         private readonly IMapper _mapper;
 
         public AccountController(
             UserManager<AppUser> userManager, 
             SignInManager<AppUser> signInManger,
             ITokenService tokenService,
+            IMailService mailService,
             IMapper mapper)
         {
             _userManager = userManager;
             _signInManger = signInManger;
             _tokenService = tokenService;
+            _mailService = mailService;
             _mapper = mapper;
         }
 
-        [HttpPost("login")]
+        [HttpPost(ApiRouter.AccountRoutes.Login)]
         public async Task<ActionResult<UserDto>> Login(LoginDto loginDto)
         {
             var user = await _userManager.FindByEmailAsync(loginDto.Email);
@@ -48,7 +54,7 @@ namespace Grocery.Controllers
             });
         }
 
-        [HttpPost("register")]
+        [HttpPost(ApiRouter.AccountRoutes.Register)]
         public async Task<ActionResult<UserDto>> Register(RegisterDto registerDto)
         {
             if(await _userManager.FindByEmailAsync(registerDto.Email) != null)
@@ -65,7 +71,6 @@ namespace Grocery.Controllers
             };
 
             var result = await _userManager.CreateAsync(user, registerDto.Password);
-
             if (!result.Succeeded) return BadRequest(new ApiResponse(400));
 
             return Ok(new UserDto()
@@ -73,6 +78,31 @@ namespace Grocery.Controllers
                 DisplayName = user.DisplayName,
                 Email = user.Email
             });
+        }
+
+
+        [HttpPost(ApiRouter.AccountRoutes.SendOtp)]
+        public async Task<IActionResult> SendOtp([FromBody] SendOtpRequestDto otpRequest) =>
+            await _mailService.SendOtp(otpRequest.Email) ? Ok(new ApiResponse(200))
+            : BadRequest(new ApiResponse(404, "User Not found"));
+
+
+        [HttpPost(ApiRouter.AccountRoutes.ActivateUser)]
+        public  async Task<IActionResult> ActivateAccount(VerifyOTPDto verifyOTP)
+        {
+            if (verifyOTP == null) return BadRequest(new ApiResponse(400));
+            bool verify = await _mailService.VerifyOTPActivateAccountAsync(verifyOTP.Email, verifyOTP.otp);
+            return verify ? Ok(new ApiResponse(200)) : BadRequest("Invalid code");
+        }
+
+
+        [HttpPatch(ApiRouter.AccountRoutes.UpdatePassword)]
+        public async Task<IActionResult> UpdatePassword(UpdatePasswordDto passwordDto)
+        {
+            var user = await _userManager.FindByEmailAsync(passwordDto.Email);
+            if (user == null) return BadRequest(400);
+            var result =await _userManager.ChangePasswordAsync(user, passwordDto.CurrentPassword, passwordDto.Password);
+            return result.Succeeded ? Ok(new ApiResponse(200)): BadRequest(400);
         }
 
 
@@ -91,9 +121,10 @@ namespace Grocery.Controllers
             });
         }
 
+
         [Authorize]
         [Cache(1000)]
-        [HttpGet("address")]
+        [HttpGet(ApiRouter.AccountRoutes.GetAddress)]
         public async Task<ActionResult<AddressDto>> GetUserAddress()
         {
             var user = await _userManager.FindUserWithAddressByEmailAsync(User);
@@ -101,8 +132,9 @@ namespace Grocery.Controllers
             return Ok(_mapper.Map<Address, AddressDto>(user.Address));
         }
 
+
         [Authorize]
-        [HttpPut("address")]
+        [HttpPut(ApiRouter.AccountRoutes.UpdateAddress)]
         public async Task<ActionResult<AddressDto>> UpdateUserAddress(AddressDto newAddress)
         {
             var email = User.FindFirstValue(ClaimTypes.Email);

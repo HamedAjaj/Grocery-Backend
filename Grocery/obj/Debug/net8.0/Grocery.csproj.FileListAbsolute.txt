@@ -309,3 +309,9 @@ D:\Grocery\Grocery-Backend\Grocery\obj\Debug\net8.0\refint\Grocery.dll
 D:\Grocery\Grocery-Backend\Grocery\obj\Debug\net8.0\Grocery.pdb
 D:\Grocery\Grocery-Backend\Grocery\obj\Debug\net8.0\Grocery.genruntimeconfig.cache
 D:\Grocery\Grocery-Backend\Grocery\obj\Debug\net8.0\ref\Grocery.dll
+D:\Grocery\Grocery-Backend\Grocery\bin\Debug\net8.0\BouncyCastle.Cryptography.dll
+D:\Grocery\Grocery-Backend\Grocery\bin\Debug\net8.0\MailKit.dll
+D:\Grocery\Grocery-Backend\Grocery\bin\Debug\net8.0\MimeKit.dll
+D:\Grocery\Grocery-Backend\Grocery\bin\Debug\net8.0\FluentValidation.dll
+D:\Grocery\Grocery-Backend\Grocery\bin\Debug\net8.0\FluentValidation.AspNetCore.dll
+D:\Grocery\Grocery-Backend\Grocery\bin\Debug\net8.0\FluentValidation.DependencyInjectionExtensions.dll

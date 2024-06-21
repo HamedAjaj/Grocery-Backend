@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.Extensions.Configuration;
-using Grocery.Dtos;
+using Grocery.Service.Dtos;
 using Grocery.Domain.Entities.Order_Aggregate;
 
 namespace Grocery.Helpers

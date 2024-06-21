@@ -1,8 +1,10 @@
 
+using Grocery.Domain.Entities;
 using Grocery.Domain.Entities.Identity;
 using Grocery.Extensions;
 using Grocery.Repository.Data;
 using Grocery.Repository.Identity;
+using Grocery.Service.ServiceDependancies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using StackExchange.Redis;
@@ -19,7 +21,7 @@ namespace Grocery
 
             builder.Services.AddControllers();
             builder.Services.AddApplicationServices();
-
+            builder.Services.AddServicesDependancies();
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy("GroceryPolicy", options =>
@@ -27,16 +29,19 @@ namespace Grocery
                     options.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin();
                 });
             });
+
             builder.Services.AddIdentityServices(builder.Configuration);
+
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
-
-            var connectionString = builder.Configuration.GetConnectionString("StoreConnection") ??
+            
+            // Mail settings
+            builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
+         
+            var connectionString = builder.Configuration.GetConnectionString("GroceryConnection") ??
                                 throw new InvalidOperationException("Error in Database Connection");
             builder.Services.AddDbContext<GroceryContext>(options => options.UseSqlServer(connectionString));
-
-
             builder.Services.AddDbContext<AppIdentityDbContext>(opions =>
             {
                 opions.UseSqlServer(builder.Configuration.GetConnectionString("IdentityConnection"));
@@ -47,7 +52,7 @@ namespace Grocery
                 var connection = builder.Configuration.GetConnectionString("Redis");
                 return ConnectionMultiplexer.Connect(connection);
             });
-        
+            
             var app = builder.Build();
 
 

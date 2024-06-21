@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Grocery.Domain.Entities;
 using Grocery.Domain.Repositories;
-using Grocery.Dtos;
+using Grocery.Service.Dtos;
 using Grocery.Errors;
 using Grocery.Helpers.Attributes;
 using Microsoft.AspNetCore.Http;

@@ -7,11 +7,19 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.4" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Grocery.Domain\Grocery.Domain.csproj" />
+    <ProjectReference Include="..\Grocery.Repository\Grocery.Repository.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="FluentValidators\Basket\" />
+    <Folder Include="FluentValidators\Product\" />
+    <Folder Include="FluentValidators\Payment\" />
   </ItemGroup>
 
 </Project>

@@ -2,7 +2,7 @@
 using Grocery.Domain.Entities;
 using Grocery.Domain.Entities.Identity;
 using Grocery.Domain.Entities.Order_Aggregate;
-using Grocery.Dtos;
+using Grocery.Service.Dtos;
 using Grocery.Helpers;
 
 namespace Grocery.Helpers
