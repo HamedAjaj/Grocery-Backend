@@ -15,6 +15,9 @@ namespace Grocery.Domain.GroceryMetaData.Routing
             public const string Delete = $"{Prefix}/delete";
             public const string Update = $"{Prefix}/update";
             public const string get = $"{Prefix}";
+            public const string getById = $"{Prefix}/{{id}}";
+            public const string getBrands  = $"{Prefix}/brands";
+            public const string getTypes  = $"{Prefix}/types";
         }
     }
 }

@@ -11,10 +11,11 @@ namespace Grocery.Domain.GroceryMetaData.Routing
         public static class OrderRoutes
         {
             private const string Prefix = $"{BaseRoute}orders";
-            public const string Add = $"{Prefix}/add";
-            public const string Update = $"{Prefix}/update";
-            public const string Delete = $"{Prefix}/delete";
-            public const string get = $"{Prefix}";
+         //   public const string Add = $"{Prefix}/add";
+         //   public const string Update = $"{Prefix}/update";
+         //   public const string Delete = $"{Prefix}/delete";
+            public const string getById = $"{Prefix}/{{id}}";
+            public const string getdeliveryMethods = $"{Prefix}/deliveryMethods";
 
         }
     }

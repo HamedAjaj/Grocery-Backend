@@ -29,3 +29,5 @@ D:\Grocery\Grocery-Backend\Grocery.Service\obj\Debug\net8.0\Grocery.Service.dll
 D:\Grocery\Grocery-Backend\Grocery.Service\obj\Debug\net8.0\refint\Grocery.Service.dll
 D:\Grocery\Grocery-Backend\Grocery.Service\obj\Debug\net8.0\Grocery.Service.pdb
 D:\Grocery\Grocery-Backend\Grocery.Service\obj\Debug\net8.0\ref\Grocery.Service.dll
+D:\Grocery\Grocery-Backend\Grocery.Service\bin\Debug\net8.0\Grocery.Repository.dll
+D:\Grocery\Grocery-Backend\Grocery.Service\bin\Debug\net8.0\Grocery.Repository.pdb

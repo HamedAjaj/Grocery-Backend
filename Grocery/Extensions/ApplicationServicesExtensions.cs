@@ -21,6 +21,10 @@ using Grocery.Domain.IServices.ITokenServices;
 using Grocery.Repository.UnitOfWorks;
 using Grocery.Service.OrderServices;
 using Grocery.Service.TokenServices;
+using System.Configuration;
+using Grocery.Domain.IServices.MailServices;
+using Grocery.Service.MailServices;
+using FluentValidation.AspNetCore;
 
 namespace Grocery.Extensions
 {
@@ -28,29 +32,14 @@ namespace Grocery.Extensions
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
-
-            // builder.Services.AddSingleton<IConnectionMultiplexer>(s => { })
         
+            services.AddScoped(typeof(IBasketRepository), typeof(BasketRepository));
 
-
-            services.AddScoped<IUnitOfWork, UnitOfWork>();
-
-            services.AddScoped<IPaymentService, PaymentService>();
-
-           services.AddScoped(typeof(IOrderService), typeof(OrderService));
-
-           services.AddScoped<ITokenService, TokenService>();
-
-           services.AddScoped(typeof(IBasketRepository), typeof(BasketRepository));
-
-          //  services.AddScoped<IGenericRepository<>, GenericRepository<>>();
             services.AddScoped(typeof(IGenericRespository<>), typeof(GenericRepository<>));
-
-            services.AddScoped<IResponseCacheService, ResponseCacheService>();
 
             //services.AddAutoMapper(M => M.AddProfile(new MappingProfiles()));
             services.AddAutoMapper(typeof(MappingProfiles));
-
+           
 
             services.Configure<ApiBehaviorOptions>(options =>
             {

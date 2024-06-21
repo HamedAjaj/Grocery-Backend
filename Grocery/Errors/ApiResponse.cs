@@ -16,6 +16,7 @@ namespace Grocery.Errors
         {
             return statusCode switch
             {
+                200 => "Ok",
                 204 => "No Content",
                 400 => "A bad request, you have made",
                 401 => "You aren't Authorized",

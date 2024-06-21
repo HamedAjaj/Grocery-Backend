@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Grocery.Domain.Entities;
 using Grocery.Domain.Specifications;
-using Grocery.Dtos;
+using Grocery.Service.Dtos;
 using Grocery.Errors;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Grocery.Helpers;
 using Grocery.Domain.IUnitOfWork;
 using Grocery.Helpers.Attributes;
+using Grocery.Domain.GroceryMetaData.Routing;
 
 namespace Grocery.Controllers
 {
@@ -26,7 +27,7 @@ namespace Grocery.Controllers
         }
 
         [Cache(1000)]
-        [HttpGet]
+        [HttpGet(ApiRouter.ProductRoutes.get)]
         public async Task<ActionResult<Pagination<ProductToReturnDto>>> GetProducts([FromQuery] ProductSpecParams productParams)
         {
             var spec = new ProductWithBrandAndTypeSpecifications(productParams);
@@ -38,7 +39,9 @@ namespace Grocery.Controllers
         }
 
         [Cache(1000)]
-        [HttpGet("id")] // GET: /api/Products/id
+        //[HttpGet("id")] // GET: /api/Products/id
+        [HttpGet(ApiRouter.ProductRoutes.getById)]
+
         public async Task<ActionResult<ProductToReturnDto>> GetProduct(int id)
         {
             var spec = new ProductWithBrandAndTypeSpecifications(id);
@@ -48,7 +51,7 @@ namespace Grocery.Controllers
         }
 
         [Cache(1000)]
-        [HttpGet("brands")]
+        [HttpGet(ApiRouter.ProductRoutes.getBrands)]
         public async Task<ActionResult<IReadOnlyList<ProductBrand>>> GetBrands()
         {
             var brands = await _unitOfWork.Respository<ProductBrand>().GetAllAsync();
@@ -56,7 +59,8 @@ namespace Grocery.Controllers
         }
 
         [Cache(1000)]
-        [HttpGet("types")]
+        [HttpGet(ApiRouter.ProductRoutes.getTypes)]
+
         public async Task<ActionResult<IReadOnlyList<ProductType>>> GetTypes()
         {
             var types = await _unitOfWork.Respository<ProductType>().GetAllAsync();

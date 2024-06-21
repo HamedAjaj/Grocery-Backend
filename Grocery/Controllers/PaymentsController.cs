@@ -1,4 +1,5 @@
 ﻿using Grocery.Domain.Entities;
+using Grocery.Domain.GroceryMetaData.Routing;
 using Grocery.Domain.IServices.IPaymentServices;
 using Grocery.Errors;
 using Microsoft.AspNetCore.Authorization;
@@ -19,7 +20,7 @@ namespace Grocery.Controllers
             _paymentService = paymentService;
         }
 
-        [HttpPost("{basketid}")] // Sigment not query string
+        [HttpPost(ApiRouter.PaymentRoutes.AddOrUpdateBasketid)] // Sigment not query string
         public async Task<ActionResult<CustomerBasket>> CreateOrUpdatePaymentIntent(string basketId)
         {
             var basket = await _paymentService.CreateOrUpdatePaymentIntent(basketId);
@@ -28,7 +29,7 @@ namespace Grocery.Controllers
 
 
 
-        [HttpPost("webhook")]
+        [HttpPost(ApiRouter.PaymentRoutes.Webhook)]
         public async Task<IActionResult> StripeWebHook()
         {
             var json = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync();
