@@ -13,7 +13,8 @@ using System.Threading.Tasks;
 using Grocery.Domain.GroceryMetaData.Routing;
 namespace Grocery.Controllers
 {
-    [Authorize]
+    [Authorize]    [ApiController]
+
     public class OrdersController : BaseApiController
     {
         private readonly IOrderService _orderService;
@@ -25,7 +26,7 @@ namespace Grocery.Controllers
             _mapper = mapper;
         }
 
-        [HttpPost]
+        [HttpPost(ApiRouter.OrderRoutes.Create)]
         public async Task<ActionResult<Order>> CreateOrder(OrderDto orderDto)
         {
             string buyerEmail = User.FindFirstValue(ClaimTypes.Email);
@@ -37,7 +38,7 @@ namespace Grocery.Controllers
 
 
         [Cache(1000)]
-        [HttpGet]
+        [HttpGet(ApiRouter.OrderRoutes.getOrderForUser)]
         public async Task<ActionResult<IReadOnlyList<OrderToReturnDto>>> GetOrdersForUser()
         {
             string buyerEmail = User.FindFirstValue(ClaimTypes.Email);
@@ -47,7 +48,7 @@ namespace Grocery.Controllers
 
         [Cache(1000)]
         [HttpGet(ApiRouter.OrderRoutes.getById)]
-        public async Task<ActionResult<OrderToReturnDto>> GetOrderForUser(int id)
+        public async Task<ActionResult<OrderToReturnDto>> GetUserOrder(int id)
         {
             string buyerEmail = User.FindFirstValue(ClaimTypes.Email);
             var order = await _orderService.GetOrderByIdForUserAsync(id, buyerEmail);
