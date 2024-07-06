@@ -49,21 +49,6 @@ namespace Grocery.Controllers
                         await _paymentService.UpdatePaymentIntentToSucceededORFailed(paymentIntent.Id, false);
                         break;
                 }
-
-
-                //// Handle the event
-                //if (stripeEvent.Type == Events.PaymentIntentPaymentFailed)
-                //{
-                //}
-                //else if (stripeEvent.Type == Events.PaymentIntentSucceeded)
-                //{
-                //}
-                //// ... handle other event types
-                //else
-                //{
-                //    Console.WriteLine("Unhandled event type: {0}", stripeEvent.Type);
-                //}
-
                 return Ok();
             }
             catch (StripeException e)

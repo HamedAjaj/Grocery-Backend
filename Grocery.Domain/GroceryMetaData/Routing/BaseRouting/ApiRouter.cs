@@ -8,8 +8,8 @@ namespace Grocery.Domain.GroceryMetaData.Routing
 {
     public static partial class ApiRouter
     {
-        private const string Root = "Api";
-        private const string Version = "V1";
+        private const string Root = "api";
+        private const string Version = "v1";
         public const string BaseRoute = $"{Root}/{Version}/";
     }
 }

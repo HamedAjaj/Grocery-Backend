@@ -16,7 +16,7 @@ namespace Grocery.Repository.Identity
         {
             base.OnModelCreating(builder);
             // Global Fillteration Condition
-            builder.Entity<AppUser>().HasQueryFilter(u => u.IsEmailVerified);
+          //  builder.Entity<AppUser>().HasQueryFilter(u => !u.IsEmailVerified);
         }
     }
 }

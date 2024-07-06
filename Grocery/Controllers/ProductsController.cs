@@ -2,10 +2,6 @@
 using Grocery.Domain.Entities;
 using Grocery.Domain.Specifications;
 using Grocery.Service.Dtos;
-using Grocery.Errors;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Grocery.Helpers;
 using Grocery.Domain.IUnitOfWork;
@@ -14,7 +10,6 @@ using Grocery.Domain.GroceryMetaData.Routing;
 
 namespace Grocery.Controllers
 {
-
     public class ProductsController : BaseApiController
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -39,9 +34,7 @@ namespace Grocery.Controllers
         }
 
         [Cache(1000)]
-        //[HttpGet("id")] // GET: /api/Products/id
         [HttpGet(ApiRouter.ProductRoutes.getById)]
-
         public async Task<ActionResult<ProductToReturnDto>> GetProduct(int id)
         {
             var spec = new ProductWithBrandAndTypeSpecifications(id);
@@ -52,19 +45,14 @@ namespace Grocery.Controllers
 
         [Cache(1000)]
         [HttpGet(ApiRouter.ProductRoutes.getBrands)]
-        public async Task<ActionResult<IReadOnlyList<ProductBrand>>> GetBrands()
-        {
-            var brands = await _unitOfWork.Respository<ProductBrand>().GetAllAsync();
-            return Ok(brands);
-        }
+        public async Task<ActionResult<IReadOnlyList<ProductBrand>>> GetBrands() =>
+            Ok(await _unitOfWork.Respository<ProductBrand>().GetAllAsync());
+        
 
         [Cache(1000)]
         [HttpGet(ApiRouter.ProductRoutes.getTypes)]
+        public async Task<ActionResult<IReadOnlyList<ProductType>>> GetTypes() =>
+            Ok(await _unitOfWork.Respository<ProductType>().GetAllAsync());
 
-        public async Task<ActionResult<IReadOnlyList<ProductType>>> GetTypes()
-        {
-            var types = await _unitOfWork.Respository<ProductType>().GetAllAsync();
-            return Ok(types);
-        }
     }
 }

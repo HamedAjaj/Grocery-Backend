@@ -11,8 +11,7 @@ namespace Grocery.Domain.GroceryMetaData.Routing
         public static class BasketRoutes
         {
             private const string Prefix = $"{BaseRoute}basket";
-            public const string Add = $"{Prefix}/add";
-            public const string Update = $"{Prefix}/update";
+            public const string AddOrUpdate = $"{Prefix}/addOrUpdate";
             public const string Delete = $"{Prefix}/delete";
             public const string get = $"{Prefix}";
         }

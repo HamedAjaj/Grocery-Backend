@@ -6,9 +6,12 @@ using Grocery.Errors;
 using Grocery.Helpers.Attributes;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Grocery.Domain.GroceryMetaData.Routing;
 
 namespace Grocery.Controllers
 {
+    [ApiController]
+
     public class BasketController : BaseApiController
     {
         private readonly IBasketRepository _basketRepository;
@@ -22,14 +25,14 @@ namespace Grocery.Controllers
 
         // used to get or recreate basket by id
         [Cache(1000)]
-        [HttpGet]
+        [HttpGet(ApiRouter.BasketRoutes.get)]
         public async Task<ActionResult<CustomerBasket>> GetBasketById(string id)
         {
             var basket = await _basketRepository.GetBasketAsync(id);
             return Ok(basket ?? new CustomerBasket(id));
         }
 
-        [HttpPost]
+        [HttpPost(ApiRouter.BasketRoutes.AddOrUpdate)]
         public async Task<ActionResult<CustomerBasket>> UpdateBasket(CustomerBasketDto basket)
         {
             var mappedBasket = _mapper.Map<CustomerBasketDto, CustomerBasket>(basket);
@@ -37,7 +40,7 @@ namespace Grocery.Controllers
             return Ok(updatedBasket !=null? updatedBasket : new ApiResponse(400));
         }
 
-        [HttpDelete]
+        [HttpDelete(ApiRouter.BasketRoutes.Delete)]
         public async Task DeleteBasket(string id) => await _basketRepository.DeleteBasketAsync(id);
         
     }

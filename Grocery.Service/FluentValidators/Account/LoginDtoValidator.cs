@@ -22,6 +22,9 @@ namespace Grocery.Service.FluentValidators.Account
                 .Matches("[a-z]").WithMessage("Password must contain at least one lowercase letter.")
                 .Matches("[0-9]").WithMessage("Password must contain at least one digit.")
                 .Matches("[^a-zA-Z0-9]").WithMessage("Password must contain at least one non-alphanumeric character.");
+            //      .NotEmpty().WithMessage("Password is required.")
+            //        .Matches("(?=^.{6,10}$)(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+}{\":;'?/<>.,])(?!.*\\s)")
+            //        .WithMessage("Password must have 1 Uppercase, 1 Lowercase, 1 number, 1 non-alphanumeric and be 6-10 characters long.");
+            }
         }
-    }
 }

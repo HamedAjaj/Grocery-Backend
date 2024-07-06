@@ -44,7 +44,7 @@ namespace Grocery.Service.MailServices
             user.OTPExpiration = DateTime.Now.AddMinutes(10);
             await _userManager.SetAuthenticationTokenAsync(user,"OTP","otp",otp);
             var subject = "Your OTP Code";
-            var body = $"<html><body><h1>Your verification code is : </h1> <span>{otp}</span></body></html>";
+            var body = $"<html><body><h1>Your verification code is : <span>{otp}</span> </h1></body></html>";
             await SendEmailAsync(email, subject, body);
             return true;
         }
@@ -52,31 +52,39 @@ namespace Grocery.Service.MailServices
         public async Task<bool> VerifyOTPActivateAccountAsync(string email, string otp)
         {
             var user = await _userManager.FindByEmailAsync(email);
-            if (user == null || user.OTP != otp || user.OTPExpiration < DateTime.Now)
-                return false;
-           
-            user.IsEmailVerified = true;
-            user.OTP = null;
-            user.OTPExpiration = null;
-            user.OTPExpiration = DateTime.MinValue;
-            await _userManager.UpdateAsync(user);
-            return true;
+            if (!IsValidOTP(user,otp))  return false;
+            UpdateUserEmailVerification(user);
+            var result= await _userManager.UpdateAsync(user);
+            return result.Succeeded;
         }
 
         public async Task<bool> VerifyOTPForgetPasswordAsync(string email, string otp)
         {
             var user = await _userManager.FindByEmailAsync(email);
-            if (user == null || user.OTP != otp || user.OTPExpiration < DateTime.Now)
-                return false;
+            if (!IsValidOTP(user,otp))  return false;
             user.OTP = null;
             user.OTPExpiration = null;
-            await _userManager.UpdateAsync(user);
-            return true;
+            var result= await _userManager.UpdateAsync(user);
+            return result.Succeeded;
         }
 
         private string GenerateOTP()
         {
             return new Random().Next(100000, 999999).ToString();
+        }
+
+
+
+        private bool IsValidOTP(AppUser user, string otp)
+        {
+            return user.OTP == otp && user.OTPExpiration > DateTime.Now;
+        }
+
+        private void UpdateUserEmailVerification(AppUser user)
+        {
+            user.IsEmailVerified = true;
+            user.OTP = null;
+            user.OTPExpiration = DateTime.MinValue;
         }
     }
 }

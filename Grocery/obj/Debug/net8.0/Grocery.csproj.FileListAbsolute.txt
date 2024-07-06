@@ -315,3 +315,5 @@ D:\Grocery\Grocery-Backend\Grocery\bin\Debug\net8.0\MimeKit.dll
 D:\Grocery\Grocery-Backend\Grocery\bin\Debug\net8.0\FluentValidation.dll
 D:\Grocery\Grocery-Backend\Grocery\bin\Debug\net8.0\FluentValidation.AspNetCore.dll
 D:\Grocery\Grocery-Backend\Grocery\bin\Debug\net8.0\FluentValidation.DependencyInjectionExtensions.dll
+D:\Grocery\Grocery-Backend\Grocery\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.Facebook.dll
+D:\Grocery\Grocery-Backend\Grocery\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.Google.dll
