@@ -1,6 +1,6 @@
 # Grocery-Backend
 
-→ Project created to be maintainable, reusable, testable ,scalable, Solid , DRY principle, union architecture note [ can changed later to be a clean architecture with CQRS ] , auto mapper , Stripe Payment , Fluent Validators for DTOs , fluent api for domain classes , Redis for basket module and cashing requests , Rate limiter requests, unit testing like Xunit , InmemoryDatabase   Specification pattern , Mail Services ,  routing , ProjectmetaData like routing of endpoints  ,  standard response used  , 3 databases used
+→ Project created to be maintainable, reusable, testable ,scalable, Solid , DRY principle, union architecture note [ can changed later to be a clean architecture with CQRS ] , auto mapper , Stripe Payment , Fluent Validators for DTOs , fluent api for domain classes , Redis for basket module and cashing requests , Rate limiter requests, unit testing like Xunit , InmemoryDatabase   Specification pattern , Mail Services ,  routing , ProjectmetaData like routing of endpoints  ,  standard response used  , 3 databases used, CORS
 
 project consist from 5 layers 
 
