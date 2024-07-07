@@ -1,8 +1,10 @@
 ﻿using Grocery.Domain.Entities.Identity;
 using Grocery.Domain.IServices.ITokenServices;
+using Grocery.Service.Dtos.UserAccount;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json.Linq;
 using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
@@ -23,50 +25,29 @@ namespace Grocery.Service.TokenServices
             _configuration = configuration;
         }
 
+        public async Task<AppUser>  ValidateGoogleToken(string token)
+        {
+            var client = new HttpClient();
+            var payload = JObject.Parse(await client.GetStringAsync($"https://oauth2.googleapis.com/tokeninfo?id_token={token}"));
 
+            var email = payload["email"]?.ToString();
+            var name = payload["name"]?.ToString();
 
-        //public async Task<string> CreateTokenAsync(AppUser user, UserManager<AppUser> userManager)
-        //{
-        //    // Validate configuration values
-        //    var validIssuer = _configuration["JWT:ValidIssuer"];
-        //    var validAudience = _configuration["JWT:ValidAudience"];
-        //    var durationInDays = double.Parse(_configuration["JWT:DurationInDays"]);
+            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(name)) return null;
+            return new AppUser { Email = email, DisplayName = name , IsEmailVerified = true };
+        }
 
-        //        // Handle invalid configuration values
-        //    if (string.IsNullOrEmpty(validIssuer) || string.IsNullOrEmpty(validAudience) || durationInDays <= 0)
-        //    {
-        //        throw new InvalidOperationException("Invalid JWT configuration values");
-        //    }
+        public async Task<AppUser> ValidateFacebookToken(string token)
+        {
+            var client = new HttpClient();
+            var payload = JObject.Parse(await client.GetStringAsync($"https://graph.facebook.com/me?access_token={token}&fields=id,name,email"));
 
-        //    // Token claims
-        //    var authClaims = new List<Claim>()
-        //    {
-        //        new Claim(ClaimTypes.Name, user.DisplayName),
-        //        new Claim(ClaimTypes.Email, user.Email),
-        //        new Claim(ClaimTypes.NameIdentifier, user.Id),
-        //        new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString())
-        //    };
+            var email = payload["email"]?.ToString();
+            var name = payload["name"]?.ToString();
 
-        //    // Add user roles as claims
-        //    var userRoles = await userManager.GetRolesAsync(user);
-        //    authClaims.AddRange(userRoles.Select(role => new Claim(ClaimTypes.Role, role)));
-
-        //    // Token signature key
-        //    var authKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:SecurityKey"]));
-
-        //    var signingCredentials = new SigningCredentials(authKey, SecurityAlgorithms.HmacSha256Signature);
-        //    // Create JWT token
-        //    var token = new JwtSecurityToken(
-        //        issuer: validIssuer,
-        //        audience: validAudience,
-        //        expires: DateTime.Now.AddDays(durationInDays),
-        //        claims: authClaims,
-        //        signingCredentials: signingCredentials
-        //    );
-
-        //    // Generate token
-        //    return new JwtSecurityTokenHandler().WriteToken(token);
-
+            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(name)) return null;
+            return new AppUser { Email = email, DisplayName = name, IsEmailVerified = true };
+        }
 
         public async Task<string> CreateTokenAsync(AppUser user, UserManager<AppUser> userManager)
         {
@@ -98,5 +79,11 @@ namespace Grocery.Service.TokenServices
             // Generate token
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
+
+
+
+
+   
+
     }
 }

@@ -19,6 +19,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
+using Microsoft.EntityFrameworkCore;
 
 namespace Grocery.Controllers
 {
@@ -44,114 +45,42 @@ namespace Grocery.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet(ApiRouter.AuthRoutes.AuthWithGoogle)]
-        public IActionResult SignInGoogle()
+
+
+
+
+
+
+
+
+        [HttpPost(ApiRouter.AuthRoutes.AuthWithGoogle)]
+        public async Task<IActionResult> GoogleSignIn([FromBody] ExternalAuthDto token)
         {
-            var properties = new AuthenticationProperties { RedirectUri = Url.Action("GoogleCallback") };
-            return Challenge(properties, "Google");
-        }
+            var userInfo = await _tokenService.ValidateGoogleToken(token.Token);
+            if (userInfo == null) return BadRequest(new ApiResponse(400,"Invalid token."));
 
-        [HttpGet(ApiRouter.AuthRoutes.AuthWithFacebook)]
-        public IActionResult SignInFacebook()
-        {
-            var properties = new AuthenticationProperties { RedirectUri = Url.Action("FacebookCallback") };
-            return Challenge(properties, "Facebook");
-        }
-
-        [HttpGet(ApiRouter.AuthRoutes.GoogleCallBack)]
-        public async Task<IActionResult> GoogleCallback()
-        {
-            var authenticateResult = await HttpContext.AuthenticateAsync("Google");
-
-            if (!authenticateResult.Succeeded)
-                return BadRequest(); 
-            var claimsPrincipal = authenticateResult.Principal;
-            var email = claimsPrincipal.FindFirst(ClaimTypes.Email)?.Value;
-            var name = claimsPrincipal.FindFirst(ClaimTypes.Name)?.Value;
-
-            var user = await _userManager.FindByEmailAsync(email);
-
-            if (user == null)
+            if (await _userManager.FindByEmailAsync(userInfo?.Email) == null)
             {
-                user = new AppUser  { UserName = email,  Email = email,  DisplayName = name };
-                var createUserResult = await _userManager.CreateAsync(user);
-                if (!createUserResult.Succeeded) return BadRequest(createUserResult.Errors);
+                var createUserResult = await _userManager.CreateAsync(userInfo);
+                if (!createUserResult.Succeeded) return BadRequest(new ApiResponse(400, createUserResult.Errors.ToString()));
             }
-            var token = await _tokenService.CreateTokenAsync(user,_userManager);
-            return Ok(new { Token=token});
+            return Ok(token);
         }
 
 
-
-        [HttpGet(ApiRouter.AuthRoutes.FcaebookCallBack)]
-        public async Task<IActionResult> FacebookCallback()
+        [HttpPost(ApiRouter.AuthRoutes.AuthWithFacebook)]
+        public async Task<IActionResult> FacebookSignIn([FromBody] string token)
         {
-            var authenticateResult = await HttpContext.AuthenticateAsync(JwtBearerDefaults.AuthenticationScheme);
-            if (!authenticateResult.Succeeded) return BadRequest();
+            var userInfo = await _tokenService.ValidateFacebookToken(token);
+            if (userInfo == null) return BadRequest(new ApiResponse(400, "Invalid token."));
 
-            var claimsPrincipal = authenticateResult.Principal;
-            var email = claimsPrincipal.FindFirst(ClaimTypes.Email)?.Value;
-            var name = claimsPrincipal.FindFirst(ClaimTypes.Name)?.Value;
-
-            if (string.IsNullOrEmpty(email)) return BadRequest("Email not available from Facebook.");
-
-            var user = await _userManager.FindByEmailAsync(email);
-            var isNewUser = false;
-
-            if (user == null)
+            if (await _userManager.FindByEmailAsync(userInfo?.Email) == null)
             {
-                user = new AppUser
-                {
-                    UserName = email,
-                    Email = email,
-                    DisplayName = name
-                };
-                var createUserResult = await _userManager.CreateAsync(user);
-                if (!createUserResult.Succeeded) return BadRequest(createUserResult.Errors);
-                isNewUser = true;
+                var createUserResult = await _userManager.CreateAsync(userInfo);
+                if (!createUserResult.Succeeded) return BadRequest(new ApiResponse(400, createUserResult.Errors.ToString()));
             }
-
-            var token = await _tokenService.CreateTokenAsync(user, _userManager);
-            return Ok(new { token });
+            return Ok(token);
         }
-
-
-
-
-
-        //[HttpGet(ApiRouter.AuthRoutes.GoogleCallBack)]
-        //public async Task<IActionResult> GoogleCallback()
-        //{
-        //    var authenticateResult = await HttpContext.AuthenticateAsync(JwtBearerDefaults.AuthenticationScheme);
-        //    if (!authenticateResult.Succeeded) return BadRequest();
-
-        //    var claimsPrincipal = authenticateResult.Principal;
-        //    var email = claimsPrincipal.FindFirst(ClaimTypes.Email)?.Value;
-        //    var name = claimsPrincipal.FindFirst(ClaimTypes.Name)?.Value;
-
-        //    if (string.IsNullOrEmpty(email)) return BadRequest("Email not available from Google.");
-
-        //    var user = await _userManager.FindByEmailAsync(email);
-        //    var isNewUser = false;
-
-        //    if (user == null)
-        //    {
-        //        user = new AppUser
-        //        {
-        //            UserName = email,
-        //            Email = email,
-        //            DisplayName = name
-        //        };
-        //        var createUserResult = await _userManager.CreateAsync(user);
-        //        if (!createUserResult.Succeeded) return BadRequest(createUserResult.Errors);
-        //        isNewUser = true;
-        //    }
-
-        //    var token = await _tokenService.CreateTokenAsync(user, _userManager);
-        //    return Ok(new { token });
-        //}
-
-
 
 
         [HttpPost(ApiRouter.AuthRoutes.Login)]
@@ -169,6 +98,7 @@ namespace Grocery.Controllers
                 Token = await _tokenService.CreateTokenAsync(user, _userManager)
             });
         }
+
 
         [HttpPost(ApiRouter.AuthRoutes.Register)]
         public async Task<ActionResult<UserDto>> Register(RegisterDto registerDto)
@@ -219,4 +149,7 @@ namespace Grocery.Controllers
         }
 
     }
+
+
+
 }
