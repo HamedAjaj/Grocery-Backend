@@ -32,7 +32,7 @@ namespace Grocery
             {
                 options.AddPolicy("GroceryPolicy", builder =>
                 {
-                    builder.WithOrigins("http://localhost:4200") // Angular development server
+                    builder.WithOrigins("http://localhost:4200") // Angular Domain
                         .AllowAnyHeader()
                         .AllowAnyMethod()
                         .AllowCredentials();

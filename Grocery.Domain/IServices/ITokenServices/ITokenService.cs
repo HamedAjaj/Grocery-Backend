@@ -11,5 +11,7 @@ namespace Grocery.Domain.IServices.ITokenServices
     public interface ITokenService
     {
         Task<string> CreateTokenAsync(AppUser user, UserManager<AppUser> userManager);
+        Task<AppUser> ValidateGoogleToken(string token);
+        Task<AppUser> ValidateFacebookToken(string token);
     }
 }
